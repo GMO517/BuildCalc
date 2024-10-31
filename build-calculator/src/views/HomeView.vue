@@ -33,7 +33,7 @@
       </div>
     </div>
     <p>總計:</p>
-    <div class="col border border-1">{{ totalPrice.toLocaleString() }} NT$</div>
+    <div class="col border border-1">NT${{ totalPrice.toLocaleString() }}</div>
   </div>
 </template>
 
@@ -76,10 +76,7 @@ export default {
           itemName: element[1],
           itemQuantityUnit: element[2],
           count: 0,
-          price:
-            typeof element[4] === "string" && element[4].includes("NT$")
-              ? Number(element[4].replace(/[^\d]/g, "")) // 去除非數字字符並轉為數字
-              : element[4], // 保持原值
+          price: this.priceProcess(element[4]),
         };
         this.processedData.push(obj);
         this.selectedCount.push(0);
@@ -99,6 +96,14 @@ export default {
       this.processedData[index].count = Number(count);
       this.processedData[index].totalPrice =
         this.processedData[index].count * this.processedData[index].price;
+    },
+
+    priceProcess(element) {
+      if (typeof element === "string" && element.includes("NT$")) {
+        return Number(element.replace(/[^\d]/g, "")); // 去除非數字字符並轉為數字
+      } else {
+        return element; // 保持原值
+      }
     },
 
     //商品數量資料處理
@@ -122,6 +127,7 @@ export default {
             ).toLocaleString()}元`;
       }
     },
+
     isPriceInvalid(price) {
       // 判斷價格是否為 undefined、空字串或不包含任何數字
       return (
