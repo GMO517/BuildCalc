@@ -1,9 +1,4 @@
 <template>
-  <!-- <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-    <button @click="fetchGoogleSheet">測試按鈕</button>
-  </div> -->
-
   <div>
     <h1>統包大叔團隊 新成屋輕預算 線上報價試算</h1>
   </div>
@@ -14,44 +9,42 @@
       <div class="col-3 border border-1">{{ item.itemName }}</div>
       <div class="col-1 border border-1">{{ item.itemQuantityUnit }}</div>
 
-      <!-- 若欄位為數量，顯示下拉式選單；否則顯示文本 -->
+      <!-- 下拉式選單和自定義數字輸入 -->
       <div class="col border border-1">
-        <template v-if="typeof item.count === 'number'">
-          <select v-model="item.count" @change="updateTotalPrice(index)">
+        <template v-if="index != 0">
+          <select
+            v-model="selectedCount[index]"
+            @change="updateTotalPrice(index)"
+            :disabled="isPriceInvalid(item.price)"
+          >
+            <option value="0">0</option>
             <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
           </select>
         </template>
-        <template v-else>
-          {{ item.count }}
-        </template>
+        <template v-else> 數量 </template>
       </div>
 
       <div class="col-3 border border-1">
-        {{
-          typeof item.price === "number" && !isNaN(item.price)
-            ? `NT$${item.price.toLocaleString()}元`
-            : item.price
-        }}
+        {{ itemCountProcess(item.price) }}
       </div>
 
       <div class="col border border-1">
-        {{ isNaN(item.count * item.price) ? "" : item.count * item.price }}
+        {{ itemPriceSumProcess(index, item.price) }}
       </div>
     </div>
+    <p>總計:</p>
+    <div class="col border border-1">{{ totalPrice.toLocaleString() }} NT$</div>
   </div>
 </template>
 
 <script>
-// import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
   name: "HomeView",
-  components: {
-    // HelloWorld,
-  },
   data() {
     return {
       processedData: [],
+      selectedCount: [], // 用來存儲選擇的數量
+      customCount: [], // 用來存儲自定義的數量
     };
   },
   methods: {
@@ -66,6 +59,8 @@ export default {
         .then((data) => {
           console.log(data);
           this.processedData = []; // 清空已存在的資料
+          this.selectedCount = []; // 清空選擇的數量
+          this.customCount = []; // 清空自定義的數量
           this.sheetDataProcess(data.values);
         })
         .catch((error) => {
@@ -87,27 +82,65 @@ export default {
               : element[4], // 保持原值
         };
         this.processedData.push(obj);
+        this.selectedCount.push(0);
+        this.customCount.push(""); // 初始化自定義的數量
       });
     },
 
-    // 增加 count
-    incrementCount(index) {
-      this.processedData[index].count++;
-    },
-
-    // 減少 count，確保 count 不會低於 0
-    decrementCount(index) {
-      if (this.processedData[index].count > 0) {
-        this.processedData[index].count--;
-      }
+    updateSelect(index) {
+      // 當使用者輸入自定義數字時，同步更新選擇的數字
+      this.selectedCount[index] = this.customCount[index];
+      this.updateTotalPrice(index); // 更新總價
     },
 
     updateTotalPrice(index) {
+      // 如果使用者選擇了數量，更新總價
+      const count = this.selectedCount[index] || this.customCount[index] || 0;
+      this.processedData[index].count = Number(count);
       this.processedData[index].totalPrice =
         this.processedData[index].count * this.processedData[index].price;
     },
+
+    //商品數量資料處理
+    itemCountProcess(count) {
+      if (typeof count === "number" && !isNaN(count)) {
+        return `NT$${count.toLocaleString()}元`;
+      } else {
+        return count;
+      }
+    },
+
+    // 項目總價處理
+    itemPriceSumProcess(dataIndex, itemPrice) {
+      if (itemPrice === undefined || dataIndex === undefined) {
+        return "";
+      } else {
+        return isNaN(this.selectedCount[dataIndex] * itemPrice)
+          ? "項目總價"
+          : `NT$${(
+              this.selectedCount[dataIndex] * itemPrice
+            ).toLocaleString()}元`;
+      }
+    },
+    isPriceInvalid(price) {
+      // 判斷價格是否為 undefined、空字串或不包含任何數字
+      return (
+        price === undefined ||
+        price === "" ||
+        (typeof price === "string" && !/\d/.test(price))
+      );
+    },
   },
 
+  computed: {
+    // 計算所有項目的總價
+    totalPrice() {
+      return this.processedData.reduce((sum, item, index) => {
+        const count = this.selectedCount[index] || this.customCount[index] || 0;
+        return sum + (count * item.price || 0);
+      }, 0);
+    },
+  },
   mounted() {
     this.fetchGoogleSheet();
   },
@@ -115,11 +148,5 @@ export default {
 </script>
 
 <style scoped>
-/* .container text-center {
-  margin-left: 5%;
-  margin-right: 5%;
-} */
-/* .row {
-  border: 2px solid black;
-} */
+/* 可以根據需要自定義樣式 */
 </style>
