@@ -67,9 +67,15 @@ export default {
           console.error("Error:", error);
         });
     },
+
     sheetDataProcess(data) {
+      let isSkipFirstData = false;
       data.forEach((element) => {
         if (element[0] === "") return; // 跳過空的資料行
+        if (!isSkipFirstData) {
+          isSkipFirstData = true;
+          return; //跳過第一個標頭資料
+        }
 
         const obj = {
           index: element[0],
