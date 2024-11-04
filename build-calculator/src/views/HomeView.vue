@@ -1,82 +1,90 @@
 <template>
   <header>
-    <div>
-      <img :src="require('@/assets/logo/logo.png')" />
-      <h2>統包大叔團隊 新成屋輕預算 線上報價試算</h2>
+    <div class="row title-row align-items-center text-center">
+      <div class="col-3">
+        <img :src="require('@/assets/logo/logo.png')" />
+      </div>
+      <div class="col-9">
+        <h2>統包大叔團隊 新成屋輕預算 線上報價試算</h2>
+      </div>
     </div>
   </header>
 
-  <div class="container text-center">
-    <div class="swiperClass">
-      <swiper
-        class="sampleSwiper"
-        :module="modules"
-        :pagination="{ clickable: true }"
-      >
-        <swiper-slide>
-          <img :src="require('@/assets/slider/20200926133419jnum2.jpg')" />
-        </swiper-slide>
-        <swiper-slide>
-          <img :src="require('@/assets/slider/20200926134016uz826.jpg')" />
-        </swiper-slide>
-      </swiper>
-    </div>
-    <div class="row">
-      <div class="col-1 border border-1">序號</div>
-      <div class="col-3 border border-1">工程項目</div>
-      <div class="col-1 border border-1">單位</div>
-      <div class="col border border-1">數量</div>
-      <div class="col-3 border border-1">單價</div>
-      <div class="col border border-1">總金額</div>
-    </div>
-
-    <div class="row" v-for="(item, index) in processedData" :key="index">
-      <div class="col-1 border border-1">{{ item.index }}</div>
-      <div class="col-3 border border-1">{{ item.itemName }}</div>
-      <div class="col-1 border border-1">{{ item.itemQuantityUnit }}</div>
-
-      <div class="col border border-1">
-        <select
-          v-model="selectedCount[index]"
-          @change="updateTotalPrice(index)"
-          :disabled="isPriceInvalid(item.price)"
+  <div class="container-bg">
+    <div class="container text-center">
+      <div class="swiperClass">
+        <swiper
+          class="sampleSwiper"
+          :module="modules"
+          :pagination="{ clickable: true }"
         >
-          <option value="0">0</option>
-          <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
-        </select>
+          <swiper-slide>
+            <img :src="require('@/assets/slider/20200926133419jnum2.jpg')" />
+          </swiper-slide>
+          <swiper-slide>
+            <img :src="require('@/assets/slider/20200926134016uz826.jpg')" />
+          </swiper-slide>
+        </swiper>
       </div>
 
-      <div class="col-3 border border-1">
-        {{ itemCountProcess(item.price) }}
+      <div class="row">
+        <div class="col-1 border border-1">序號</div>
+        <div class="col-3 border border-1">工程項目</div>
+        <div class="col-1 border border-1">單位</div>
+        <div class="col border border-1">數量</div>
+        <div class="col-3 border border-1">單價</div>
+        <div class="col border border-1">總金額</div>
       </div>
 
-      <div class="col border border-1">
-        {{ itemPriceSumProcess(index, item.price) }}
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-5 border border-1">總計:</div>
-      <div class="col-7 border border-1">
-        NT${{ totalPrice.toLocaleString() }}
-      </div>
-    </div>
+      <div class="row" v-for="(item, index) in processedData" :key="index">
+        <div class="col-1 border border-1">{{ item.index }}</div>
+        <div class="col-3 border border-1">{{ item.itemName }}</div>
+        <div class="col-1 border border-1">{{ item.itemQuantityUnit }}</div>
 
-    <div class="row">
-      <div class="col-5 border border-1">
-        預估雜項總計(依裝修經驗約為5~10%↑):
-      </div>
-      <div class="col-7 border border-1">
-        NT${{ totalPriceWithExtra(minAddition).toLocaleString() }}~ NT${{
-          totalPriceWithExtra(maxAddition).toLocaleString()
-        }}
-      </div>
-    </div>
+        <div class="col border border-1">
+          <select
+            v-model="selectedCount[index]"
+            @change="updateTotalPrice(index)"
+            :disabled="isPriceInvalid(item.price)"
+          >
+            <option value="0">0</option>
+            <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+          </select>
+        </div>
 
-    <div class="row note-content border border-2">
-      說明:此線上估價試算系統使用期限約為3天，裝修金額隨著個人需求會有些許調整。<br />
-      試算後有符合者，本公司收費3,000元(合作後可併入工程款)，以利安排場勘及施工前準備及進度表。<br />
-      匯款帳號:星展銀行(810)中壢分行 6709209238 達圓室內裝修工程有限公司
+        <div class="col-3 border border-1">
+          {{ itemCountProcess(item.price) }}
+        </div>
+
+        <div class="col border border-1">
+          {{ itemPriceSumProcess(index, item.price) }}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-5 border border-1">總計:</div>
+        <div class="col-7 border border-1">
+          NT${{ totalPrice.toLocaleString() }}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-5 border border-1">
+          預估雜項總計(依裝修經驗約為5~10%↑):
+        </div>
+        <div class="col-7 border border-1">
+          NT$ {{ totalPriceWithExtra(minAddition).toLocaleString() }} ~ NT$
+          {{ totalPriceWithExtra(maxAddition).toLocaleString() }}
+        </div>
+      </div>
+
+      <div class="row note-content border border-2">
+        <div class="col">
+          說明:此線上估價試算系統使用期限約為3天，裝修金額隨著個人需求會有些許調整。<br />
+          試算後有符合者，本公司收費3,000元(合作後可併入工程款)，以利安排場勘及施工前準備及進度表。<br />
+          匯款帳號:星展銀行(810)中壢分行 6709209238 達圓室內裝修工程有限公司
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -170,7 +178,7 @@ export default {
 
     itemCountProcess(count) {
       if (typeof count === "number" && !isNaN(count))
-        return `NT$${count.toLocaleString()}元`;
+        return `NT$ ${count.toLocaleString()}元`;
       else return count;
     },
 
@@ -184,7 +192,7 @@ export default {
       ) {
         return "";
       }
-      return `NT$${(
+      return `NT$ ${(
         this.selectedCount[dataIndex] * itemPrice
       ).toLocaleString()}元`;
     },
