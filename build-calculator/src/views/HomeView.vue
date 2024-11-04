@@ -114,24 +114,25 @@ export default {
 
     //商品數量資料處理
     itemCountProcess(count) {
-      if (typeof count === "number" && !isNaN(count)) {
+      if (typeof count === "number" && !isNaN(count))
         return `NT$${count.toLocaleString()}元`;
-      } else {
-        return count;
-      }
+      else return count;
     },
 
     // 項目總價處理
     itemPriceSumProcess(dataIndex, itemPrice) {
       if (itemPrice === undefined || dataIndex === undefined) {
         return "";
-      } else {
-        return isNaN(this.selectedCount[dataIndex] * itemPrice)
-          ? "項目總價"
-          : `NT$${(
-              this.selectedCount[dataIndex] * itemPrice
-            ).toLocaleString()}元`;
       }
+      if (
+        typeof this.selectedCount[dataIndex] !== "number" ||
+        typeof itemPrice !== "number"
+      ) {
+        return "";
+      }
+      return `NT$${(
+        this.selectedCount[dataIndex] * itemPrice
+      ).toLocaleString()}元`;
     },
 
     isPriceInvalid(price) {
