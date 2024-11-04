@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkbuild_calculator"]=self["webpackChunkbuild_calculator"]||[]).push([[594],{603:function(u,a,n){n.r(a),n.d(a,{default:function(){return i}});var t=n(6768);const c={class:"about"};function r(u,a){return(0,t.uX)(),(0,t.CE)("div",c,a[0]||(a[0]=[(0,t.Lk)("h1",null,"This is an about page",-1)]))}var l=n(1241);const e={},s=(0,l.A)(e,[["render",r]]);var i=s}}]);
-//# sourceMappingURL=about.5ade5433.js.map
