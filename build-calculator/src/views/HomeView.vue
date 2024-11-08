@@ -66,12 +66,44 @@
         <div class="col border border-1" v-if="noteInfoLength(item.noteInfo)">
           {{ item.noteInfo }}
         </div>
-        <div
-          class="col border border-1"
-          v-else
-          style="color: blue; text-decoration: underline; cursor: pointer"
-        >
-          請點我
+        <div class="col border border-1" v-else>
+          <div class="button-tooltip-wrapper">
+            <button
+              @mouseenter="item.showTooltip = true"
+              @mouseleave="item.showTooltip = false"
+              style="
+                background: none;
+                border: none;
+                color: blue;
+                text-decoration: underline;
+                cursor: pointer;
+                position: relative;
+              "
+            >
+              請點我
+            </button>
+            <span
+              v-if="item.showTooltip"
+              style="
+                position: absolute;
+                bottom: 100%; /* 調整到按鈕下方 */
+                left: 50%;
+                transform: translateX(-50%); /* 讓提示框水平居中 */
+                background: #f0f0f0;
+                border: 1px solid #ccc;
+                padding: 5px;
+                border-radius: 4px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                white-space: nowrap;
+                text-align: center;
+                z-index: 10;
+                max-width: 200px;
+                word-wrap: break-word;
+              "
+            >
+              {{ item.noteInfo }}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -169,6 +201,7 @@ export default {
           count: 0,
           price: this.priceProcess(element[4]),
           noteInfo: element[6],
+          showTooltip: false, //用於控制提示框顯示
         };
         this.processedData.push(obj);
         this.selectedCount.push(0);
