@@ -34,6 +34,10 @@
         <div class="col border border-1">數量</div>
         <div class="col-3 border border-1">單價</div>
         <div class="col border border-1">總金額</div>
+        <div class="col border border-1">備註</div>
+      </div>
+      <div class="row">
+        <div class="col border border-1">保護工程(依社區規定)(不列入初估)</div>
       </div>
 
       <div class="row" v-for="(item, index) in processedData" :key="index">
@@ -58,6 +62,16 @@
 
         <div class="col border border-1">
           {{ itemPriceSumProcess(index, item.price) }}
+        </div>
+        <div class="col border border-1" v-if="noteInfoLength(item.noteInfo)">
+          {{ item.noteInfo }}
+        </div>
+        <div
+          class="col border border-1"
+          v-else
+          style="color: blue; text-decoration: underline; cursor: pointer"
+        >
+          請點我
         </div>
       </div>
 
@@ -87,6 +101,10 @@
       </div>
     </div>
   </div>
+
+  <div class="footer-div --bs-tertiary-color">
+    Copyright © 達圓室內裝修工程有限公司 網頁設計 : GMO
+  </div>
 </template>
 
 <script>
@@ -105,6 +123,7 @@ export default {
       customCount: [],
       minAddition: 5,
       maxAddition: 10,
+      noteLimit: 3,
     };
   },
 
@@ -149,6 +168,7 @@ export default {
           itemQuantityUnit: element[2],
           count: 0,
           price: this.priceProcess(element[4]),
+          noteInfo: element[6],
         };
         this.processedData.push(obj);
         this.selectedCount.push(0);
@@ -207,6 +227,10 @@ export default {
 
     totalPriceWithExtra(addition) {
       return this.totalPrice * (1 + addition / 100);
+    },
+    noteInfoLength(noteInfo) {
+      if (noteInfo === "" || noteInfo === undefined) return true;
+      if (noteInfo.length <= this.noteLimit) return true;
     },
   },
 

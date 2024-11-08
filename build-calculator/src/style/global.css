@@ -8,7 +8,7 @@
   width: 90%;
   max-width: 1600px;
   min-width: 800px;
-  margin-bottom: 50px;
+  padding-bottom: 50px;
 }
 
 header {
@@ -33,4 +33,10 @@ header {
 
 form-row {
   margin-top: 10px;
+}
+
+.footer-div {
+  background-color: var(--bs-dark-bg-subtle);
+  /* height: 30%; */
+  width: 100%;
 }
