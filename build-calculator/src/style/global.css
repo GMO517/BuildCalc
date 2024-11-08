@@ -1,3 +1,9 @@
+:root {
+  --tableColor-red: #fdcdcb;
+  --tableColor-orange: #fac6ae;
+  --tableColor-yellow: #fce4a2;
+}
+
 .container-bg {
   background-image: url("@/assets/images/bg01.jpg");
   background-size: cover;
@@ -43,4 +49,30 @@ form-row {
 
 .button-tooltip-wrapper {
   position: relative; /* 讓它相對於按鈕定位 */
+}
+
+.tooltipBtn {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  position: relative;
+}
+
+.tooltipModel {
+  position: absolute;
+  bottom: 100%; /* 調整到按鈕下方 */
+  left: 50%;
+  transform: translateX(-50%); /* 讓提示框水平居中 */
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  text-align: center;
+  z-index: 10;
+  max-width: 200px;
+  word-wrap: break-word;
 }

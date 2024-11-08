@@ -40,8 +40,17 @@
         <div class="col border border-1">保護工程(依社區規定)(不列入初估)</div>
       </div>
 
-      <div class="row" v-for="(item, index) in processedData" :key="index">
-        <div class="col-1 border border-1">{{ item.index }}</div>
+      <div
+        class="row"
+        v-for="(item, index) in processedData"
+        :key="index"
+        :style="{
+          backgroundColor: 'var(' + getColorStyle(item.index) + ')',
+        }"
+      >
+        <div class="col-1 border border-1">
+          {{ item.index }}
+        </div>
         <div class="col-3 border border-1">{{ item.itemName }}</div>
         <div class="col-1 border border-1">{{ item.itemQuantityUnit }}</div>
 
@@ -71,36 +80,11 @@
             <button
               @mouseenter="item.showTooltip = true"
               @mouseleave="item.showTooltip = false"
-              style="
-                background: none;
-                border: none;
-                color: blue;
-                text-decoration: underline;
-                cursor: pointer;
-                position: relative;
-              "
+              class="tooltipBtn"
             >
               請點我
             </button>
-            <span
-              v-if="item.showTooltip"
-              style="
-                position: absolute;
-                bottom: 100%; /* 調整到按鈕下方 */
-                left: 50%;
-                transform: translateX(-50%); /* 讓提示框水平居中 */
-                background: #f0f0f0;
-                border: 1px solid #ccc;
-                padding: 5px;
-                border-radius: 4px;
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-                white-space: nowrap;
-                text-align: center;
-                z-index: 10;
-                max-width: 200px;
-                word-wrap: break-word;
-              "
-            >
+            <span v-if="item.showTooltip" class="tooltipModel">
               {{ item.noteInfo }}
             </span>
           </div>
@@ -156,6 +140,12 @@ export default {
       minAddition: 5,
       maxAddition: 10,
       noteLimit: 3,
+
+      colorArr: [
+        "--tableColor-red",
+        "--tableColor-orange",
+        "--tableColor-yellow",
+      ],
     };
   },
 
@@ -165,6 +155,8 @@ export default {
   },
 
   methods: {
+    currentColorIndex: 0,
+
     fetchGoogleSheet() {
       const apiKey = "AIzaSyCblqD68QVjdlMY5jN10euonBBGopL0J08";
       const sheetId = "1hUJ9GPEiwBh9yO8NIGfehOWKMDy4lkmy4H2QaNamr9g";
@@ -174,10 +166,10 @@ export default {
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           this.processedData = []; // 清空已存在的資料
           this.selectedCount = []; // 清空選擇的數量
           this.customCount = []; // 清空自定義的數量
+          this.currentColorIndex = 0;
           this.sheetDataProcess(data.values);
         })
         .catch((error) => {
@@ -261,9 +253,24 @@ export default {
     totalPriceWithExtra(addition) {
       return this.totalPrice * (1 + addition / 100);
     },
+
     noteInfoLength(noteInfo) {
       if (noteInfo === "" || noteInfo === undefined) return true;
       if (noteInfo.length <= this.noteLimit) return true;
+    },
+
+    getColorStyle(typeIndex) {
+      if (typeIndex === "1") {
+        // 先增加，再檢查是否超出範圍
+        this.currentColorIndex++;
+
+        if (this.currentColorIndex >= this.colorArr.length) {
+          this.currentColorIndex = 0; // 重置為 0，避免越界
+        }
+      }
+      console.log(typeIndex);
+      console.log(this.colorArr[this.currentColorIndex]);
+      return this.colorArr[this.currentColorIndex];
     },
   },
 
