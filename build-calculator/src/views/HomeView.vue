@@ -61,7 +61,7 @@
             :disabled="isPriceInvalid(item.price)"
           >
             <option value="0">0</option>
-            <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+            <option v-for="n in 50" :key="n" :value="n">{{ n }}</option>
           </select>
         </div>
 
