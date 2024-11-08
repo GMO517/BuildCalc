@@ -268,8 +268,8 @@ export default {
           this.currentColorIndex = 0; // 重置為 0，避免越界
         }
       }
-      console.log(typeIndex);
-      console.log(this.colorArr[this.currentColorIndex]);
+      //console.log(typeIndex);
+      //console.log(this.colorArr[this.currentColorIndex]);
       return this.colorArr[this.currentColorIndex];
     },
   },
