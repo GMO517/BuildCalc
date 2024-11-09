@@ -1,10 +1,10 @@
 <template>
   <header>
     <div class="row title-row align-items-center text-center">
-      <div class="col-3">
+      <div class="col-3 col-sm-12">
         <img :src="require('@/assets/logo/logo.png')" />
       </div>
-      <div class="col-9">
+      <div class="col-9 col-sm-12 mt-2 mt-sm-0">
         <h2>統包大叔團隊 新成屋輕預算 線上報價試算</h2>
       </div>
     </div>
@@ -82,7 +82,7 @@
               @mouseleave="item.showTooltip = false"
               class="tooltipBtn"
             >
-              請點我
+              看備註
             </button>
             <span v-if="item.showTooltip" class="tooltipModel">
               {{ item.noteInfo }}
@@ -140,7 +140,6 @@ export default {
       minAddition: 5,
       maxAddition: 10,
       noteLimit: 3,
-
       colorArr: [
         "--tableColor-red",
         "--tableColor-orange",
@@ -156,7 +155,6 @@ export default {
 
   methods: {
     currentColorIndex: 0,
-
     fetchGoogleSheet() {
       const apiKey = "AIzaSyCblqD68QVjdlMY5jN10euonBBGopL0J08";
       const sheetId = "1hUJ9GPEiwBh9yO8NIGfehOWKMDy4lkmy4H2QaNamr9g";
@@ -228,15 +226,8 @@ export default {
     },
 
     itemPriceSumProcess(dataIndex, itemPrice) {
-      if (itemPrice === undefined || dataIndex === undefined) {
-        return "";
-      }
-      if (
-        typeof this.selectedCount[dataIndex] !== "number" ||
-        typeof itemPrice !== "number"
-      ) {
-        return "";
-      }
+      if (itemPrice === undefined || dataIndex === undefined) return "";
+      if (typeof itemPrice !== "number") return "";
       return `NT$ ${(
         this.selectedCount[dataIndex] * itemPrice
       ).toLocaleString()}元`;
